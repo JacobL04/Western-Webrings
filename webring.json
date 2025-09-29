@@ -47,16 +47,16 @@
     {
         "name": "Jiwon Lee",
         "url": "https://portfolio-black-five-lwt2l6w675.vercel.app/",
-        "urlText": "VISIT ➔",
+        "urlText": "◁ VISITHERE ▷",
         "graduating_year": "2027",
         "program": "Computer Science",
-        "description": "Jiwon's NOTSICK Portfolio",
-        "background": "#1500FF",
-        "nameColor": "white", 
-        "programColor": "white",
+        "description": "Jiwon PORTFOLIO???",
+        "background": "https://media1.tenor.com/m/3FTaZHP6q2wAAAAC/shohei-ohtani.gif",
+        "nameColor": "#ff00ea",
+        "programColor": "#00e1ff",
         "gradYearColor": "white",
-        "descriptionColor": "#dedede",
-        "urlColor": "white",
+        "descriptionColor": "#12fd77",
+        "urlColor": "#007bff",
         "fontFamily": "monospace"
     }
 ]
