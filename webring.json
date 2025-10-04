@@ -58,5 +58,20 @@
         "descriptionColor": "#12fd77",
         "urlColor": "#007bff",
         "fontFamily": "monospace"
-    }
+    },
+    {
+  "name": "Enter Your Name",
+  "url": "#",
+  "urlText": "☆｡･ﾟ✧ My Website ✧･｡☆",
+  "graduating_year": "202x",
+  "program": "Program",
+  "description": "Short description of your website",
+  "background": "https://i.pinimg.com/736x/c9/01/d6/c901d66c7e1ddcc4293df9c03949decb.jpg",
+  "nameColor": "#000000",
+  "programColor": "#000000",
+  "gradYearColor": "#666666",
+  "descriptionColor": "#818284",
+  "urlColor": "#007bff",
+  "fontFamily": "monospace"
+}
 ]

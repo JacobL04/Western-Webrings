@@ -3,6 +3,7 @@
 <head>
     <title>Western Webring Widget</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="indexWebringPreviews.css">
     <link href="https://fonts.cdnfonts.com/css/bentonsans-regular" rel="stylesheet">
     <link href="https://cdn.msar.me/fonts/Tiempos/font.css" rel="stylesheet">
 
@@ -203,6 +204,18 @@ export default WesternWebring;
                     </div>
 
                     <div>
+                        <!-- Presets: select + actions -->
+                        <div class="presets">
+                            <label for="presetsSelect">Presets:</label>
+                            <select id="presetsSelect" class="preset-select">
+                                <option value="">— Choose a preset —</option>
+                            </select>
+                            <div class="preset-actions">
+                                <button type="button" id="applyPresetBtn" class="preset-btn">Apply selected preset</button>
+                                <button type="button" id="resetDefaultBtn" class="preset-btn">Reset to default</button>
+                            </div>
+                        </div>
+
                         <label for="name">Name:</label>
                         <input type="text" id="name" placeholder="Enter Your Name">
                     </div>

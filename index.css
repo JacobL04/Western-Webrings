@@ -42,14 +42,11 @@ a:hover {
     font-size: large;
 }
 
-/* Profile Preview */
-#profilePreview {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Default to 3 columns */
-    gap: 1.5rem;
-}
 
+/* ------------------------ */
 /* Members Profile Websites */
+/* ------------------------ */
+
 #profiles {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Default to 3 columns */

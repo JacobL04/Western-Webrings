@@ -51,6 +51,8 @@ fetch("webring.json")
         document.getElementById("profiles").innerHTML = `<p>Failed to load profiles.</p>`;
 });
 
+
+
 // Live Preview Customization Tool
 document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.getElementById("name");
@@ -79,6 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const generateJSON = document.getElementById("generateJSON");
   const jsonOutput = document.getElementById("jsonOutput");
 
+  // Presets container
+  const presetsContainer = document.getElementById('presetsContainer');
+  const presetsSelect = document.getElementById('presetsSelect');
+  const applyPresetBtn = document.getElementById('applyPresetBtn');
+  const resetDefaultBtn = document.getElementById('resetDefaultBtn');
+
   // Switch between color and image input
   const backgroundColorOption = document.getElementById("backgroundColorOption");
   const backgroundImageOption = document.getElementById("backgroundImageOption");
@@ -98,50 +106,234 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePreview(); // To update preview after toggle
   }
 
-  // Update Preview
+
+  // Helper: escape text inserted into innerHTML to avoid accidental markup injection
+  function escapeHtml(str) {
+    if (str == null) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function updatePreview() {
-    // Name
-    previewName.textContent = nameInput.value || "Enter Your Name";
+    const previewRoot = document.getElementById("profileCardPreview");
 
-    // URL
-    previewUrl.href = urlInput.value || "#";
-    previewUrl.textContent = urlInput.value ? (urlTextInput.value || "Visit my website") : "";  // Default URL Title
+    const profile = {
+      name: nameInput.value || "Enter Your Name",
+      url: urlInput.value || "#",
+      urlText: urlTextInput.value || "Visit my website",
+      graduating_year: graduatingYearInput.value || "202x",
+      program: programInput.value || "Program",
+      description: descriptionInput.value || "Short description of your website",
+      background: backgroundColorOption.checked ? (backgroundColorInput.value || "#f9f9f9") : (backgroundImageUrlInput.value || ""),
+      nameColor: nameColorInput.value || "black",
+      programColor: programColorInput.value || "black",
+      gradYearColor: gradYearColorInput.value || "#666",
+      descriptionColor: descriptionColorInput.value || "#818284",
+      urlColor: urlColorInput.value || "#007bff",
+      fontFamily: fontFamilyInput.value || "BentonSans Regular",
+    };
 
-    // Program
-    previewProgram.textContent = programInput.value || "Program";
+    const card = document.createElement("div");
+    card.classList.add("profile-card");
 
-    // Graduating Year
-    previewGradYear.textContent = `Class of ${graduatingYearInput.value || "202x"}`;
-
-    // Description
-    previewDescription.textContent = descriptionInput.value || "Short description of your website";
-
-    // Background and Font
-    if (backgroundColorOption.checked) {
-      const backgroundColor = backgroundColorInput.value || "#f9f9f9";
-      document.getElementById("profileCardPreview").style.backgroundColor = backgroundColor;
-      document.getElementById("profileCardPreview").style.backgroundImage = ""; // Clear background image if color is selected
-    } 
-    else if (backgroundImageOption.checked) {
-      const backgroundImage = backgroundImageUrlInput.value;
-      if (backgroundImage && backgroundImage.startsWith("http")) {
-        document.getElementById("profileCardPreview").style.backgroundImage = `url(${backgroundImage})`;
-        document.getElementById("profileCardPreview").style.backgroundColor = ""; // Clear background color if image is selected
-      } 
-      else {
-        document.getElementById("profileCardPreview").style.backgroundImage = ""; // No image if the URL is not valid
-      }
+    // Background handling: image URL vs color
+    if (typeof profile.background === "string" && profile.background.startsWith("http")) {
+      
+      
+      card.style.setProperty('--background-image', `url(${profile.background})`);
+      
+      card.style.backgroundImage = `url(${profile.background})`;
+      card.style.backgroundColor = "";
+    }
+    else if (typeof profile.background === "string" && profile.background.startsWith("#")) {
+      card.style.backgroundImage = "";
+      card.style.backgroundColor = profile.background;
+    }
+    else {
+      card.style.backgroundImage = "";
+      card.style.backgroundColor = "#f9f9f9";
     }
 
-    // Font Family
-    document.getElementById("profileCardPreview").style.fontFamily = fontFamilyInput.value;
+    card.style.fontFamily = profile.fontFamily;
+    card.style.color = "";
 
-    // Text Colors
-    previewName.style.color = nameColorInput.value;
-    previewProgram.style.color = programColorInput.value;
-    previewGradYear.style.color = gradYearColorInput.value || "#666"; // Default to gray if no color is selected
-    previewDescription.style.color = descriptionColorInput.value || "#818284"; // Default description color
-    previewUrl.style.color = urlColorInput.value || "#007bff"; // Default URL color
+    card.innerHTML = `
+            <h2 style="font-family: ${escapeHtml(profile.fontFamily)}, sans-serif; color: ${escapeHtml(profile.nameColor)};">${escapeHtml(profile.name)}</h2>
+            <div class="meta">
+                <span class="program" style="color: ${escapeHtml(profile.programColor)};">${escapeHtml(profile.program)}</span>
+                <span class="separator">|</span>
+                <span class="grad-year" style="color: ${escapeHtml(profile.gradYearColor)};">Class of ${escapeHtml(profile.graduating_year)}</span>
+            </div>
+            <p class="description" style="color: ${escapeHtml(profile.descriptionColor)};">${escapeHtml(profile.description)}</p>
+            <a id="previewAnchor" href="${escapeHtml(profile.url)}" target="_blank" style="color: ${escapeHtml(profile.urlColor)};">${escapeHtml(profile.urlText)}</a>
+        `;
+
+    previewRoot.innerHTML = "";
+    previewRoot.appendChild(card);
+  }
+
+
+  // Premade profile cards
+  const presets = [
+    {
+      title: 'Simple — White',
+      name: 'Your Name',
+      program: 'Program',
+      graduating_year: '2025',
+      description: 'A short blurb about the site.',
+      background: '#ffffff',
+      nameColor: '#111',
+      programColor: '#333',
+      gradYearColor: '#666',
+      descriptionColor: '#666',
+      urlColor: '#007bff',
+      urlText: 'Visit my site',
+      url: '#',
+      fontFamily: 'BentonSans Regular'
+    },
+    {
+      title: 'GIF — Banner',
+      name: 'Shapes',
+      program: 'Community',
+      graduating_year: '—',
+      description: 'A cozy collection of western themed sites.',
+      background: 'https://i.pinimg.com/originals/c8/d0/9b/c8d09ba97b3cfd0dd9334e3fac7925e3.gif',
+      nameColor: '#fff',
+      programColor: '#fff',
+      gradYearColor: '#f0f0f0',
+      descriptionColor: '#f5e8ff',
+      urlColor: '#ffe6ff',
+      urlText: 'Explore',
+      url: '#',
+      fontFamily: 'BentonSans Regular'
+    },
+    {
+      title: 'Muted — Card',
+      name: 'Simple Card',
+      program: 'Blog',
+      graduating_year: '202x',
+      description: 'Minimal and legible.',
+      background: '#f2f2f2',
+      nameColor: '#2c2c2c',
+      programColor: '#4f2683',
+      gradYearColor: '#666',
+      descriptionColor: '#818284',
+      urlColor: '#4F2683',
+      urlText: 'Read more',
+      url: '#',
+      fontFamily: 'Arial'
+    }
+  ];
+
+  // Default profile values (used for reset)
+  const defaultProfile = {
+    name: "Enter Your Name",
+    url: "#",
+    urlText: "Visit my website",
+    graduating_year: "202x",
+    program: "Program",
+    description: "Short description of your website",
+    background: "#f9f9f9",
+    nameColor: "#000000",
+    programColor: "#000000",
+    gradYearColor: "#666666",
+    descriptionColor: "#818284",
+    urlColor: "#007bff",
+    fontFamily: "BentonSans Regular"
+  };
+
+  // Populate presets select
+  if (presetsSelect) {
+    presets.forEach((p, idx) => {
+      const opt = document.createElement('option');
+      opt.value = String(idx);
+      opt.textContent = p.title;
+      presetsSelect.appendChild(opt);
+    });
+  }
+
+  // Apply selected preset from dropdown
+  if (applyPresetBtn && presetsSelect) {
+    applyPresetBtn.addEventListener('click', () => {
+      const idx = presetsSelect.value;
+      if (idx === "") return;
+      const preset = presets[Number(idx)];
+      applyPreset(preset);
+    });
+  }
+
+  // Reset to default values
+  if (resetDefaultBtn) {
+    resetDefaultBtn.addEventListener('click', () => {
+      // apply default values to inputs
+      nameInput.value = defaultProfile.name;
+      urlInput.value = defaultProfile.url;
+      urlTextInput.value = defaultProfile.urlText;
+      graduatingYearInput.value = defaultProfile.graduating_year;
+      programInput.value = defaultProfile.program;
+      descriptionInput.value = defaultProfile.description;
+      fontFamilyInput.value = defaultProfile.fontFamily;
+      // background as color
+      backgroundColorOption.checked = true;
+      toggleBackgroundInput();
+      backgroundColorInput.value = defaultProfile.background;
+      nameColorInput.value = defaultProfile.nameColor;
+      programColorInput.value = defaultProfile.programColor;
+      descriptionColorInput.value = defaultProfile.descriptionColor;
+      urlColorInput.value = defaultProfile.urlColor;
+      gradYearColorInput.value = defaultProfile.gradYearColor;
+
+      // Clear presets select
+      if (presetsSelect) presetsSelect.value = "";
+
+      updatePreview();
+    });
+  }
+
+  function applyPreset(preset) {
+    // Apply preset fields to inputs (only those that exist)
+    if (!preset) return;
+    nameInput.value = preset.name || '';
+    programInput.value = preset.program || '';
+    graduatingYearInput.value = preset.graduating_year || '';
+    descriptionInput.value = preset.description || '';
+    urlInput.value = preset.url || '';
+    urlTextInput.value = preset.urlText || '';
+    fontFamilyInput.value = preset.fontFamily || '';
+    // Determine background type: if starts with '#' treat as color, else treat as image
+    if (preset.background && preset.background.startsWith('#')) {
+      backgroundColorOption.checked = true;
+      toggleBackgroundInput();
+      backgroundColorInput.value = preset.background;
+    } else {
+      backgroundImageOption.checked = true;
+      toggleBackgroundInput();
+      backgroundImageUrlInput.value = preset.background || '';
+    }
+    // Colors
+    nameColorInput.value = preset.nameColor || '#000000';
+    programColorInput.value = preset.programColor || '#000000';
+    descriptionColorInput.value = preset.descriptionColor || '#818284';
+    urlColorInput.value = preset.urlColor || '#007bff';
+    gradYearColorInput.value = preset.gradYearColor || '#666';
+
+    updatePreview();
+  }
+
+  // Render preset buttons if a container exists
+  if (presetsContainer) {
+    presets.forEach(p => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'preset-btn';
+      btn.textContent = p.title;
+      btn.addEventListener('click', () => applyPreset(p));
+      presetsContainer.appendChild(btn);
+    });
   }
 
   // Generate JSON
