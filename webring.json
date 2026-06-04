@@ -58,20 +58,5 @@
         "descriptionColor": "#12fd77",
         "urlColor": "#007bff",
         "fontFamily": "monospace"
-    },
-    {
-        "name": "Test User",
-        "url": "http://127.0.0.1:5501/index.html",
-        "urlText": "◁ VISITHERE ▷",
-        "graduating_year": "2027",
-        "program": "Computer Science",
-        "description": "Jiwon PORTFOLIO???",
-        "background": "https://media1.tenor.com/m/3FTaZHP6q2wAAAAC/shohei-ohtani.gif",
-        "nameColor": "#ff00ea",
-        "programColor": "#00e1ff",
-        "gradYearColor": "white",
-        "descriptionColor": "#12fd77",
-        "urlColor": "#007bff",
-        "fontFamily": "monospace"
     }
 ]
